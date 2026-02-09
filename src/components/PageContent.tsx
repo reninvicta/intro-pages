@@ -25,13 +25,6 @@ export default function PageContent({ page }: any) {
             assets.push(img);
         }
 
-        if (page.musicUrl) {
-            const audio = new Audio();
-            audio.src = page.musicUrl;
-            audio.preload = "auto";
-            assets.push(audio);
-        }
-
         let loadedCount = 0;
         if (assets.length === 0) {
             setLoading(false);
@@ -39,7 +32,6 @@ export default function PageContent({ page }: any) {
         }
 
         assets.forEach((asset) => {
-            asset.addEventListener("canplaythrough", checkLoaded, { once: true });
             asset.addEventListener("load", checkLoaded, { once: true });
             asset.addEventListener("error", checkLoaded, { once: true });
         });
@@ -50,7 +42,7 @@ export default function PageContent({ page }: any) {
                 setLoading(false);
             }
         }
-    }, [page.backdropUrl, page.avatarUrl, page.musicUrl]);
+    }, [page.backdropUrl, page.avatarUrl]);
 
     // Autoplay
     useEffect(() => {
