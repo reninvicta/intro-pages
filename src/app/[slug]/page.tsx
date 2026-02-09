@@ -2,7 +2,6 @@
 import { notFound } from "next/navigation";
 import { getPageBySlug } from "@/lib/getPageBySlug";
 import PageContent from "@/components/PageContent";
-import Head from "next/head";
 
 export default async function Page({ params }: { params: { slug: string }; }) {
     const awaitedParams = await params;
@@ -29,14 +28,14 @@ export default async function Page({ params }: { params: { slug: string }; }) {
             <head>
                 <title>{page.name}</title>
                 <meta property="og:title" content={page.name} />
-                <meta property="og:description" content={page.status + "\n" + page.bio} />
+                <meta property="og:description" content={page.status || page.username} />
                 <meta property="og:image" content={page.avatarUrl || ""} />
                 <meta property="og:url" content={`https://invicta.dev/${awaitedParams.slug}`} />
                 <meta property="og:type" content="website" />
 
-                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:card" content="summary" />
                 <meta name="twitter:title" content={page.name} />
-                <meta name="twitter:description" content={page.status + "\n" + page.bio} />
+                <meta name="twitter:description" content={page.status || page.username} />
                 <meta name="twitter:image" content={page.avatarUrl || ""} />
             </head>
             <PageContent page={safePage} />
