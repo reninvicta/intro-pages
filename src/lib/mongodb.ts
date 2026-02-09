@@ -10,7 +10,7 @@ declare global {
     var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-const client = new MongoClient(uri);
+const client = new MongoClient(uri, { tls: true, tlsAllowInvalidCertificates: false, serverSelectionTimeoutMS: 5000 });
 
 const clientPromise = global._mongoClientPromise ?? (global._mongoClientPromise = client.connect());
 
