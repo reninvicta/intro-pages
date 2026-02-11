@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Username and name are required" }, { status: 400 });
         }
 
-        await updatePageByUserId(body.username, { name: body.name });
+        await updatePageByUserId(body.username, body);
         return NextResponse.json({ message: "Page updated successfully" });
     } catch (err) {
         console.error("Failed to update page:", err)
