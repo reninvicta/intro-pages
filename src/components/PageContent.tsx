@@ -56,7 +56,7 @@ export default function PageContent({ page }: any) {
                     </div>
 
                     {page.status && (
-                        <div className="italic text-zinc-400/80 text-center mb-3">{page.status}</div>
+                        <div className="italic text-zinc-400/80 text-center mb-3 mt-4">{page.status}</div>
                     )}
 
                     <div className="whitespace-pre-line max-w-none text-center mx-auto"><ReactMarkdown
