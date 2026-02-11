@@ -8,41 +8,7 @@ export default function PageContent({ page }: any) {
     const audioRef = useRef<HTMLAudioElement>(null);
     const [requiresClick, setRequiresClick] = useState(false);
     const [showClickOverlay, setShowClickOverlay] = useState(false);
-    const [loading, setLoading] = useState(true);
 
-    // Loading
-    useEffect(() => {
-        const assets: (HTMLImageElement | HTMLAudioElement)[] = [];
-        if (page.backdropUrl) {
-            const img = new Image();
-            img.src = page.backdropUrl;
-            assets.push(img);
-        }
-
-        if (page.avatarUrl) {
-            const img = new Image();
-            img.src = page.avatarUrl;
-            assets.push(img);
-        }
-
-        let loadedCount = 0;
-        if (assets.length === 0) {
-            setLoading(false);
-            return;
-        }
-
-        assets.forEach((asset) => {
-            asset.addEventListener("load", checkLoaded, { once: true });
-            asset.addEventListener("error", checkLoaded, { once: true });
-        });
-
-        function checkLoaded() {
-            loadedCount++;
-            if (loadedCount === assets.length) {
-                setLoading(false);
-            }
-        }
-    }, [page.backdropUrl, page.avatarUrl]);
 
     // Autoplay
     useEffect(() => {
@@ -106,13 +72,6 @@ export default function PageContent({ page }: any) {
                         }}
                     >{page.bio}</ReactMarkdown></div>
                 </div>
-
-                {/* Loading overlay */}
-                {loading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-zinc-900/95 z-50 pointer-events-auto">
-                        <span className="text-white text-2xl font-medium">Loading...</span>
-                    </div>
-                )}
 
                 {requiresClick && (
                     <div className={`absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-lg z-50 transition-opacity duration-500 ${
