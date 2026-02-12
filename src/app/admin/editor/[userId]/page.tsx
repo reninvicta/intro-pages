@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { notFound } from "next/navigation";
-import { getPageByUserId } from "@/lib/getPageBySlug";
+import { getPageByUserId } from "@/lib/pages";
 import PageEditor from "@/components/PageEditor";
 
 export default async function AdminUserPage({ params }: { params: { userId: string } }) {

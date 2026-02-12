@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Field, inputClass } from "./PageEditor";
 import ReactMarkdown from "react-markdown";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -8,7 +9,10 @@ export default function PageContent({ page }: any) {
     const audioRef = useRef<HTMLAudioElement>(null);
     const [requiresClick, setRequiresClick] = useState(false);
     const [showClickOverlay, setShowClickOverlay] = useState(false);
-
+    const [message, setMessage] = useState("");
+    const [sending, setSending] = useState(false);
+    const [sent, setSent] = useState(false);
+    const [canSend, setCanSend] = useState(true);
 
     // Autoplay
     useEffect(() => {
@@ -71,6 +75,64 @@ export default function PageContent({ page }: any) {
                             ),
                         }}
                     >{page.bio}</ReactMarkdown></div>
+
+                    {page.showMessageBox && (
+                        <Field label="Leave an anonymous message!">
+                            <div className="flex flex-row items-center">
+                                <input
+                                className={inputClass}
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                                placeholder="Your message..."
+                                />
+
+                                <button
+                                    className="
+                                        ml-2 w-48 rounded-lg px-4 min-h-[2.3rem] text-m font-medium
+                                        bg-zinc-900/40 text-indigo-200 justify-center
+                                        border border-indigo-400/30
+                                        hover:bg-indigo-900/30
+                                        disabled:opacity-50 disabled:cursor-not-allowed
+                                        transition
+                                    "
+                                    disabled={sending || message.trim() === "" || sent || !canSend}
+                                    onClick={async () => {
+                                        if (message.trim() === "") return;
+                                        if (message.length > 1000) {
+                                            alert("Message is too long! Please limit it to 1000 characters.");
+                                            return;
+                                        }
+                                        setSending(true);
+                                        const res = await fetch("/api/messages/submit", {
+                                            method: "POST",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({
+                                                slug: page.slug,
+                                                message: message,
+                                            }),
+                                        })
+
+                                        if (res.ok) {
+                                            setMessage("");
+                                            setSent(true);
+                                            setTimeout(() => setSent(false), 3000);
+                                        } else {
+                                            if (res.status === 403) {
+                                                alert("Sorry! You have been blacklisted from sending messages.");
+                                                setCanSend(false);
+                                            } else {
+                                                alert("Failed to send message. Please try again later.");
+                                            }
+                                        }
+
+                                        setSending(false);
+                                    }}
+                                >
+                                    {sent ? "Sent!" : "Send"}
+                                </button>
+                            </div>
+                        </Field>
+                    )}
                 </div>
 
                 {requiresClick && (

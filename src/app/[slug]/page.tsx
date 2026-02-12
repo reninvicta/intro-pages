@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { notFound } from "next/navigation";
-import { getCachedPageBySlug, getPageBySlug } from "@/lib/getPageBySlug";
+import { getCachedPageBySlug, getPageBySlug } from "@/lib/pages";
 import PageContent from "@/components/PageContent";
 import { Metadata } from "next";
+
+// if in dev server then localhost:3000
+const domain = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://invicta.dev";
 
 export async function generateMetadata({ params }: { params: {slug: string}; }): Promise<Metadata> {
     const awaitedParams = await params;
@@ -15,6 +18,14 @@ export async function generateMetadata({ params }: { params: {slug: string}; }):
 
     if (!page) return {};
 
+    if (page.useDiscordValues === true) {
+        const apiResponse = await fetch(`${domain}/api/discord-avatar?id=${page.discordId}`)
+        if (apiResponse.ok) {
+            const data = await apiResponse.json();
+            page.avatarUrl = data.avatar;
+        } // soft error - do nothing on fail
+    }
+
     return {
         title: page.name,
         description: page.status || page.username,
@@ -22,7 +33,7 @@ export async function generateMetadata({ params }: { params: {slug: string}; }):
             title: page.name,
             description: page.status || page.username,
             images: page.avatarUrl ? [page.avatarUrl] : [],
-            url: `https://invicta.dev/${slug}`,
+            url: `${domain}/${slug}`,
             type: "website",
         },
         twitter: {
@@ -49,8 +60,16 @@ export default async function Page({ params }: { params: { slug: string }; }) {
         notFound();
     }
 
+    if (page.useDiscordValues === true) {
+        const apiResponse = await fetch(`${domain}/api/discord-avatar?id=${page.discordId}`)
+        if (apiResponse.ok) {
+            const data = await apiResponse.json();
+            page.avatarUrl = data.avatar;
+        } // soft error - do nothing on fail
+    }
+
     const safePage = (() => {
-        const { _id, ...rest } = page;
+        const { _id, userId, ...rest } = page;
         return rest;
     })()
 

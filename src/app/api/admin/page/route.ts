@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { updatePageByUserId } from "@/lib/getPageBySlug";
+import { updatePageByUserId } from "@/lib/pages";
 
 export async function POST(req: NextRequest) {
     try {

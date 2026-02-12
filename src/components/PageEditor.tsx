@@ -3,12 +3,12 @@
 
 import { useState, useRef, useEffect } from "react";
 
-const inputClass = "w-full rounded-lg bg-zinc-950/60 border border-white/10 " +
+export const inputClass = "w-full rounded-lg bg-zinc-950/60 border border-white/10 " +
     "px-3 py-2 text-sm min-h-[2.5rem]" +
     "focus:outline-none focus:ring-2 focus:ring-indigo-500/40 " +
     "focus:border-indigo-500/40 transition text-center";
 
-function Field({ label, description, children }: { label:string, description?: string, children: React.ReactNode }) {
+export function Field({ label, description, children }: { label:string, description?: string, children: React.ReactNode }) {
     return (
         <div className="justify-center text-center rounded-xl bg-zinc-900/40 border border-white/5 space-y-2 backdrop-blur-sm p-2">
             <div>
@@ -64,7 +64,7 @@ export default function PageEditor({ page }: { page: any }) {
 
     async function save() {
         setSaving(true);
-        await fetch("../api/admin/page", {
+        await fetch("../../api/admin/page", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(form),
@@ -182,9 +182,10 @@ export default function PageEditor({ page }: { page: any }) {
                             }
                             ></textarea>
                         </Field>
-
-                        <Toggle label="Use Discord Avatar (BROKEN FOR NOW)" checked={form.useDiscordValues} onChange={(v) => update("useDiscordValues", v)} />
                     </div>
+
+                    <Toggle label="Use Discord Avatar" checked={form.useDiscordValues} onChange={(v) => update("useDiscordValues", v)} />
+                    <Toggle label="Show Message Box" checked={form.showMessageBox} onChange={(v) => update("showMessageBox", v)} />
                 </div>
 
                 <button
