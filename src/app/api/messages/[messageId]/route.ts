@@ -2,7 +2,10 @@ import { removeMessage } from "@/lib/messages";
 import { NextRequest, NextResponse } from "next/server";
 import { getPageByUserId } from "@/lib/pages";
 
-export async function DELETE(request: NextRequest, { params }: { params: { messageId: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ messageId: string }> }
+) {
   try { 
     const authHeader = request.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Id ")) {
