@@ -3,6 +3,14 @@ import { updatePageByUserId } from "@/lib/pages";
 
 export async function POST(req: NextRequest) {
     try {
+        const authHeader = req.headers.get("Authorization");
+        if (!authHeader || !authHeader.startsWith("Id ")) {
+            return NextResponse.json(
+                { error: "Unauthorized" },
+                { status: 403 }
+            );
+        }
+
         const body = await req.json();
 
         if(!body.username || !body.name) {

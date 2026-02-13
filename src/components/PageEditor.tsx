@@ -66,7 +66,7 @@ export default function PageEditor({ page }: { page: any }) {
         setSaving(true);
         await fetch("../../api/admin/page", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", "Authorization": `Id ${page.userId}` },
             body: JSON.stringify(form),
         });
         setSaving(false);
